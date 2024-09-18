@@ -24,6 +24,9 @@ model_config = transformers.AutoConfig.from_pretrained(
     trust_remote_code=True,
     max_new_tokens=1024
 )
+
+tokenizer = AutoTokenizer.from_pretrained(model_id)
+
 model = transformers.AutoModelForCausalLM.from_pretrained(
     model_id,
     trust_remote_code=True,
@@ -31,12 +34,12 @@ model = transformers.AutoModelForCausalLM.from_pretrained(
     quantization_config=bnb_config,
     device_map=device,
 )
-tokenizer = AutoTokenizer.from_pretrained(model_id)
 
 query_pipeline = transformers.pipeline(
         "text-generation",
         model=model,
         tokenizer=tokenizer,
         torch_dtype=torch.float16,
-        max_length=1024,
+        # max_length=1024,
+        max_new_tokens=512,
         device_map=device,)
